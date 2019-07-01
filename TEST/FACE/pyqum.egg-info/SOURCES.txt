@@ -4,6 +4,7 @@ setup.cfg
 setup.py
 pyqum/__init__.py
 pyqum/auth.py
+pyqum/authschema.sql
 pyqum/blog.py
 pyqum/bridge.py
 pyqum/display.py
@@ -1663,6 +1664,7 @@ pyqum/templates/blog/dsply/figdynamic.html
 pyqum/templates/blog/dsply/figstatic.html
 pyqum/templates/blog/dsply/figstream.html
 pyqum/templates/blog/dsply/game01.html
+pyqum/templates/blog/dsply/test.html
 pyqum/templates/blog/machn/all.html
 pyqum/templates/blog/machn/awg.html
 pyqum/templates/blog/machn/bdr.html
