@@ -39,6 +39,7 @@ def openall(aoi=0, aof=3, aii=0, aif=31, read=True, write=False, clock=False, sa
     '''
     ad = address()
     rs = ad.lookup(mdlname) # Instrument's Address
+    print(type(rs))
     read_task, write_task, clock_task, max_samp_rate, writer, reader = None, None, None, None, None, None
     if read:
         read_task = nidaqmx.Task()
@@ -148,7 +149,7 @@ def test():
     # Test Amplifier settings
     A = amplifier()
     for i in range(1):
-        print("\nSensing Hard Panel #%s:" %(i+1))
+        print(Back.GREEN + Fore.WHITE + "\nSensing Hard Panel #%s:" %(i+1))
         A.sensehardpanel()
         print("SupplyP: %s" %A.SupplyP)
         print("SupplyN: %s" %A.SupplyN)
@@ -163,13 +164,20 @@ def test():
     A.close()
 
     # Test Streaming IV-curve
-    X0 = waveform("0 to -1 *150 to 1 *300 to 0 *150") # waveform("0 to 5 *700 to 10*1300 to 0 * 1000"), waveform("0 to 3 *700  to 1*1500 to 7*500 to 0 * 300")
-    M = measure(sample_rate=10000, duty_cycle=0.8, samps_per_chan=X0.count)
+    X0 =  waveform("0 to -1 *150 to 1 *300 to 0 *150")
+
+    XX = waveform("1to1*2")
+    print("XX-count: %s\nXX-data:\n%s"%(XX.count,XX.data))
+
+    # waveform("0 to 5 *700 to 10*1300 to 0 * 1000"), waveform("0 to 3 *700  to 1*1500 to 7*500 to 0 * 300")
+    #原本的 M = measure(sample_rate=1000, duty_cycle=0.8, samps_per_chan=X0.count)
+    M = measure(sample_rate=1500, duty_cycle=0.825, samps_per_chan=X0.count) # New one
     read_values = M.IVb(X0.data)
     V0 = read_values[0]
     V = read_values[3]/(A.Rb)
-    curve([range(X0.count),range(V.size)], [array(X0.data)/A.Division,list(V0)], "Channel #0", "arb time", "V(V)", ["-k","or"])
+    #curve([range(X0.count),range(V.size)], [array(X0.data)/A.Division,list(V0)], "Channel #0", "arb time", "V(V)", ["-k","or"])
     # print(list(V))
+   # curve([],[list(V)] ,"IRCdelayT","RCdelayT", "I", [".k"]) # New one
     curve([array(X0.data)/A.Division], [list(V)], "IVb", "V", "I", [".k"])
     curve([array(X0.data[:-1])/A.Division], [derivative(array(X0.data)/A.Division, V)[1]], "IVb", "V", "I", [".k"])
     M.close()
